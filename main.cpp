@@ -49,6 +49,9 @@ void changeObjType();
 void createStar();
 //#endregion
 
+//#region MIDPOINT_ALGORITHM_predefine
+void changeLineDrawing();
+//#endregion
 
 
 int main(int argc, char **argv) {
@@ -78,6 +81,7 @@ void display(void) {
     // unit
     createUnit();
 
+    // object
     changeObjType();
     glFlush();
 }
@@ -501,5 +505,11 @@ void changeObjType(){
     } else if (valueObjType == 12){
         createStar();
     }
+}
+//#endregion
+
+//#region MIDPOINT_ALGORITHM
+void changeLineDrawing(){
+
 }
 //#endregion
