@@ -116,6 +116,9 @@ void createMenu(){
     // select on each item on the menu
     glutAddMenuEntry("DDA Line", 1);
     glutAddMenuEntry("Midpoint Line", 2);
+    glutAddMenuEntry("Trigonometry Circle", 10);
+    glutAddMenuEntry("Midpoint Circle", 11);
+
 
     // for line color changing
     submenu_Color = glutCreateMenu(selectMenu);
