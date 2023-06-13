@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.9)
-project(For_OpenGL_Lab)
+project(OpenGL_Lab5)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-add_executable(For_OpenGL_Lab main.cpp)
+add_executable(OpenGL_Lab5 main.cpp)
 
-target_link_libraries(For_OpenGL_Lab opengl32 glu32 freeglut)
+target_link_libraries(OpenGL_Lab5 opengl32 glu32 freeglut)

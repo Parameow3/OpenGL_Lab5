@@ -40,6 +40,8 @@ void changeLineColor();
 void changeLineDrawing();
 void ddaLine(int x1, int x2, int y1, int y2);
 void midpointLine(int x1, int x2, int y1, int y2);
+void midpointCircle(int x, int y, int r);
+void pointsCircle(int x, int y, int ix, int iy);
 //#endregion
 
 
@@ -50,7 +52,7 @@ int main(int argc, char **argv) {
     menu = glutCreateWindow("Menu");
     createMenu();
     init();
-    reqInput();
+//    reqInput();
     glutDisplayFunc(display);
     glutMainLoop();
 
@@ -66,6 +68,8 @@ void display(void) {
     gluOrtho2D(0, 500.0, 0, 500.0);
 
     glColor3f(0,0,0);
+
+    midpointCircle(250, 250, 200);
     changeLineColor();
     changeLineWidth();
     changeLineDrawing();
@@ -188,6 +192,40 @@ void ddaLine(int x1, int x2, int y1, int y2){
         y += yInc;
     }
     glEnd();
+}
+
+void midpointCircle(int ix, int iy, int r){
+    int x = 0;
+    int y = r;
+    double d = (5.0/4.0) - r;
+    glBegin(GL_POINTS);
+    glVertex2i(ix, iy);
+    pointsCircle(x, y, ix, iy);
+    while(y > x)
+    {
+        if(d < 0){
+            d += (2*x) + 3; x +=1;
+        }
+        else{
+            d += (2*x) - (2*y) + 5;
+            x += 1;
+            y -= 1;
+        }
+        pointsCircle(x, y, ix, iy);
+    }
+    glEnd();
+
+}
+
+void pointsCircle(int x, int y, int ix, int iy) {
+    glVertex2i(x + ix, y + iy);
+    glVertex2i(y + iy, x + ix);
+    glVertex2i(-x + ix, y + iy);
+    glVertex2i(-y + iy, x + ix);
+    glVertex2i(-y + iy, -x + ix);
+    glVertex2i(-x + ix, -y + iy);
+    glVertex2i(x + ix, -y + iy);
+    glVertex2i(y + iy, -x + ix);
 }
 
 void midpointLine(int x1, int x2, int y1, int y2){
