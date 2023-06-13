@@ -42,12 +42,13 @@ void ddaLine(int x1, int x2, int y1, int y2);
 void midpointLine(int x1, int x2, int y1, int y2);
 void midpointCircle(int x, int y, int r);
 void pointsCircle(int x, int y, int ix, int iy);
+void digitalApproximation();
 //#endregion
 
 
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(1000, 500);
     glutInitWindowPosition(200, 200);
     menu = glutCreateWindow("Menu");
     createMenu();
@@ -65,11 +66,16 @@ void display(void) {
     // clear background of current window
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();// Reset the model-view matrix
-    gluOrtho2D(0, 500.0, 0, 500.0);
+    gluOrtho2D(0, 1000.0, 0, 500.0);
 
     glColor3f(0,0,0);
 
     midpointCircle(250, 250, 200);
+
+    digitalApproximation();
+
+    midpointCircle(750, 250, 200);
+
     changeLineColor();
     changeLineWidth();
     changeLineDrawing();
@@ -194,38 +200,15 @@ void ddaLine(int x1, int x2, int y1, int y2){
     glEnd();
 }
 
-void midpointCircle(int ix, int iy, int r){
-    int x = 0;
-    int y = r;
-    double d = (5.0/4.0) - r;
-    glBegin(GL_POINTS);
-    glVertex2i(ix, iy);
-    pointsCircle(x, y, ix, iy);
-    while(y > x)
-    {
-        if(d < 0){
-            d += (2*x) + 3; x +=1;
-        }
-        else{
-            d += (2*x) - (2*y) + 5;
-            x += 1;
-            y -= 1;
-        }
-        pointsCircle(x, y, ix, iy);
-    }
-    glEnd();
-
-}
-
 void pointsCircle(int x, int y, int ix, int iy) {
     glVertex2i(x + ix, y + iy);
-    glVertex2i(y + iy, x + ix);
+    glVertex2i(y + ix, x + iy);
     glVertex2i(-x + ix, y + iy);
-    glVertex2i(-y + iy, x + ix);
-    glVertex2i(-y + iy, -x + ix);
+    glVertex2i(-y + ix, x + iy);
+    glVertex2i(-y + ix, -x + iy);
     glVertex2i(-x + ix, -y + iy);
     glVertex2i(x + ix, -y + iy);
-    glVertex2i(y + iy, -x + ix);
+    glVertex2i(y + ix, -x + iy);
 }
 
 void midpointLine(int x1, int x2, int y1, int y2){
@@ -263,6 +246,106 @@ void changeLineDrawing(){
     }
 }
 //#endregion
+
+
+void midpointCircle(int ix, int iy, int r){
+    int x = 0;
+    int y = r;
+    double d = (5.0/4.0) - r;
+    glBegin(GL_POINTS);
+    glVertex2i(ix, iy);
+    pointsCircle(x, y, ix, iy);
+    while(y > x)
+    {
+        if(d < 0){
+            d += (2*x) + 3; x +=1;
+        }
+        else{
+            d += (2*x) - (2*y) + 5;
+            x += 1;
+            y -= 1;
+        }
+        pointsCircle(x, y, ix, iy);
+    }
+    glEnd();
+
+}
+
+void digitalApproximation(){
+    int x = 500;
+    int y = 500;
+
+    for (int j = 50; j <= 500; j+=50) {
+        for (int i = 50; i <= 500; i+=50) {
+            glBegin(GL_LINE_LOOP);
+            glVertex2i(x, y); // top left
+            glVertex2i(x+i, y); // top right
+            glVertex2i(x+i, y-j); // bottom right
+            glVertex2i(x, y-j); // bottom left
+            glEnd();
+        }
+    }
+
+    glColor3f(0,0,1);
+    glBegin(GL_QUADS);
+    for (int i = 0; i < 200; i+=50) {
+
+        // top line
+        glVertex2i(650 + i, 450); // top left
+        glVertex2i(650 + 50 + i, 450); // top right
+        glVertex2i(650 + 50 + i, 400); // bottom right
+        glVertex2i(650 + i, 400); // bottom left
+
+        // bottom line
+        glVertex2i(650 + i, 100); // top left
+        glVertex2i(650 + 50 + i, 100); // top right
+        glVertex2i(650 + 50 + i, 50); // bottom right
+        glVertex2i(650 + i, 50); // bottom left
+
+        // left line
+        glVertex2i(550, 150 + 50 + i); // top left
+        glVertex2i(600, 150 + 50+ i); // top right
+        glVertex2i(600, 150 + i); // bottom right
+        glVertex2i(550, 150 + i); // bottom left
+
+        // right line
+        glVertex2i(900, 150 + 50 + i); // top left
+        glVertex2i(950, 150 + 50+ i); // top right
+        glVertex2i(950, 150 + i); // bottom right
+        glVertex2i(900, 150 + i); // bottom left
+
+
+    }
+
+    // 4 edges
+    // top left
+    glVertex2i(600, 400); // top left
+    glVertex2i(650, 400); // top right
+    glVertex2i(650, 350); // bottom right
+    glVertex2i(600, 350); // bottom left
+
+    // top right
+    glVertex2i(850, 400); // top left
+    glVertex2i(900, 400); // top right
+    glVertex2i(900, 350); // bottom right
+    glVertex2i(850, 350); // bottom left
+
+
+    // bottom left
+    glVertex2i(600, 150); // top left
+    glVertex2i(650, 150); // top right
+    glVertex2i(650, 100); // bottom right
+    glVertex2i(600, 100); // bottom left
+
+    // bottom right
+    glVertex2i(850, 150); // top left
+    glVertex2i(900, 150); // top right
+    glVertex2i(900, 100); // bottom right
+    glVertex2i(850, 100); // bottom left
+
+    glEnd();
+
+}
 
 void changeLineColor(){
     if (valueColor == 3){
