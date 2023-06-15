@@ -1,6 +1,11 @@
 /**
- *
- * Created on 01/06/2023 By: Tan Bunchhay
+ * midpointCircle.cpp is the application that contain a menu that provided drawing feature like:
+ * - DDA LINE
+ * - MIDPOINT LINE
+ * - TRIGONOMETRY LINE
+ * - MIDPOINT CIRCLE
+ * that can change color of the line and also can change the size of the line
+ * Created on 15/06/2023 By: Tan Bunchhay
  */
 
 // require header
@@ -18,6 +23,7 @@ using namespace std;
 
 using namespace std;
 
+// VARIABLE DECLARATION
 int submenu_Drawing;
 int submenu_Color;
 int submenu_Width;
@@ -27,6 +33,7 @@ int valueColor = 0;
 int valueWidth = 0;
 int ix1,ix2,iy1,iy2;
 
+// ---------------------------
 void display(void);
 void init(void);
 void selectMenu(int n);
@@ -34,18 +41,19 @@ void createMenu();
 void reqInput();
 void changeLineWidth();
 void changeLineColor();
-
+// ---------------------------
 
 //#region MIDPOINT_ALGORITHM_predefine
-void changeLineDrawing();
+void changeDrawing();
 void ddaLine(int x1, int x2, int y1, int y2);
 void midpointLine(int x1, int x2, int y1, int y2);
 void midpointCircle(int x, int y, int r);
 void pointsCircle(int x, int y, int ix, int iy);
 void digitalApproximation();
+void trigonometryCircle();
 //#endregion
 
-
+// ---------------------------
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitWindowSize(1000, 500);
@@ -53,14 +61,11 @@ int main(int argc, char **argv) {
     menu = glutCreateWindow("Menu");
     createMenu();
     init();
-//    reqInput();
     glutDisplayFunc(display);
     glutMainLoop();
 
     return 0;
 }
-
-//#region BRONZE_CHALLENGE
 
 void display(void) {
     // clear background of current window
@@ -72,15 +77,7 @@ void display(void) {
 
     changeLineColor();
     changeLineWidth();
-    changeLineDrawing();
-
-    midpointCircle(250, 250, 200);
-
-    digitalApproximation();
-
-    midpointCircle(750, 250, 200);
-
-
+    changeDrawing();
 
     glFlush();
 }
@@ -103,7 +100,7 @@ void selectMenu(int n){
         exit(0);
     }
 
-    else if(n > 0 && n < 3)
+    else if(n > 0 && n < 3 || n > 9 && n < 12)
     {
         valueDrawing = n;
     }
@@ -166,6 +163,7 @@ void createMenu(){
 
 }
 
+// ---------------------------
 //#region MIDPOINT_ALGORITHM
 void ddaLine(int x1, int x2, int y1, int y2){
     int deltaX = x2 - x1;
@@ -201,18 +199,6 @@ void ddaLine(int x1, int x2, int y1, int y2){
     }
     glEnd();
 }
-
-void pointsCircle(int x, int y, int ix, int iy) {
-    glVertex2i(x + ix, y + iy);
-    glVertex2i(y + ix, x + iy);
-    glVertex2i(-x + ix, y + iy);
-    glVertex2i(-y + ix, x + iy);
-    glVertex2i(-y + ix, -x + iy);
-    glVertex2i(-x + ix, -y + iy);
-    glVertex2i(x + ix, -y + iy);
-    glVertex2i(y + ix, -x + iy);
-}
-
 void midpointLine(int x1, int x2, int y1, int y2){
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
@@ -236,19 +222,19 @@ void midpointLine(int x1, int x2, int y1, int y2){
     }
     glEnd();
 }
-
-void changeLineDrawing(){
-    // DDA LINE
-    if(valueDrawing == 1 || valueDrawing == 0){
-        ddaLine(ix1, ix2, iy1, iy2);
-    }
-    // MIDPOINT LINE
-    else if (valueDrawing == 2){
-        midpointLine(ix1, ix2, iy1, iy2);
-    }
-}
 //#endregion
 
+// ---------------------------
+void pointsCircle(int x, int y, int ix, int iy) {
+    glVertex2i(x + ix, y + iy);
+    glVertex2i(y + ix, x + iy);
+    glVertex2i(-x + ix, y + iy);
+    glVertex2i(-y + ix, x + iy);
+    glVertex2i(-y + ix, -x + iy);
+    glVertex2i(-x + ix, -y + iy);
+    glVertex2i(x + ix, -y + iy);
+    glVertex2i(y + ix, -x + iy);
+}
 
 void midpointCircle(int ix, int iy, int r){
     int x = 0;
@@ -349,23 +335,20 @@ void digitalApproximation(){
 
 }
 
-void changeLineColor(){
-    if (valueColor == 3){
-        glPushMatrix();
-        glColor3f(0.0, 0.0, 0.0);
-        glPopMatrix();
-    } else if (valueColor == 4){
-        glPushMatrix();
-        glColor3f(1.0, 0.0, 0.0);
-        glPopMatrix();
+void trigonometryCircle(){
+    //  formula
+    //  x = r * cos(degAngle * pi / 180) + xc
+    //  y = r * sin(degAngle * pi / 180) + yc
+    glBegin(GL_POINTS );
+    for(double degAngle = 0; degAngle <= 360; degAngle+=0.1){
+        double x = 200 * cos((degAngle * 3.14159265359) / 180) + 500;
+        double y = 200 * sin((degAngle * 3.14159265359) / 180) + 250;
+        glVertex2f(x, y);
     }
-    else if (valueColor == 5){
-        glPushMatrix();
-        glColor3f(0.0, 0.0, 1.0);
-        glPopMatrix();
-    }
+    glEnd();
 }
 
+// ----------------------------
 void changeLineWidth(){
     if (valueWidth == 6){
         glPushMatrix();
@@ -387,7 +370,44 @@ void changeLineWidth(){
         glPopMatrix();
     }
 }
+void changeLineColor(){
+    if (valueColor == 3){
+        glPushMatrix();
+        glColor3f(0.0, 0.0, 0.0);
+        glPopMatrix();
+    } else if (valueColor == 4){
+        glPushMatrix();
+        glColor3f(1.0, 0.0, 0.0);
+        glPopMatrix();
+    }
+    else if (valueColor == 5){
+        glPushMatrix();
+        glColor3f(0.0, 0.0, 1.0);
+        glPopMatrix();
+    }
+}
+void changeDrawing(){
+    // DDA LINE
+    if(valueDrawing == 1){
+        reqInput();
+        ddaLine(ix1, ix2, iy1, iy2);
+    }
+        // MIDPOINT LINE
+    else if (valueDrawing == 2){
+        reqInput();
+        midpointLine(ix1, ix2, iy1, iy2);
+    }
+        // TRIGONOMETRY CIRCLE
+    else if (valueDrawing == 10){
+        trigonometryCircle();
+    }
+        // MIDPOINT CIRCLE
+    else if (valueDrawing == 11){
+        midpointCircle(250, 250, 200);
 
+        digitalApproximation();
+    }
+}
 void reqInput(){
     cout << "Please Input:" << endl;
     cout << " x1: "; cin >> ix1;
