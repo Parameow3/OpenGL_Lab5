@@ -70,15 +70,17 @@ void display(void) {
 
     glColor3f(0,0,0);
 
+    changeLineColor();
+    changeLineWidth();
+    changeLineDrawing();
+
     midpointCircle(250, 250, 200);
 
     digitalApproximation();
 
     midpointCircle(750, 250, 200);
 
-    changeLineColor();
-    changeLineWidth();
-    changeLineDrawing();
+
 
     glFlush();
 }
